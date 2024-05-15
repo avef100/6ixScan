@@ -2,36 +2,25 @@ import subprocess
 import datetime
 import time
 import sys
+import configparser
 
-# Function to execute commands and handle errors
-def execute_command(command):
-    try:
-        subprocess.run(command, shell=True, check=True, stderr=subprocess.PIPE)
-        return True, None
-    except subprocess.CalledProcessError as e:
-        return False, e.stderr.decode("utf-8")
-
-# Function to print colorful progress bar
-def print_progress_bar(tool_name, progress):
-    bar_length = 30
-    block = int(round(bar_length * progress))
-    progress_bar = "█" * block + "-" * (bar_length - block)
-    print(f"\033[96m{tool_name}:\033[0m [\033[92m{progress_bar}\033[0m] {progress*100:.1f}%")
-
-# Function to write results to file
-def write_to_file(content):
-    filename = f"6ixScan_{datetime.datetime.now().strftime('%m_%d-%H:%M')}.txt"
-    with open(filename, "a") as file:
-        file.write(content + "\n")
-
-# Main function
 def main():
+    # Read configuration
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    website = config['scan_configuration']['website']
+
+    if not website:
+        print("Please provide a website in the configuration file.")
+        sys.exit(1)
+
     if len(sys.argv) != 2:
         print("Usage: python3 6ixScan.py <website>")
         sys.exit(1)
 
     website = sys.argv[1]
     results = []
+
 
     # WHOIS
     print_progress_bar("WHOIS", 0.1)
