@@ -1,0 +1,6 @@
+dnsmap
+nikto
+nmap
+sqlmap
+sublist3r
+uniscan
